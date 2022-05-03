@@ -27,7 +27,21 @@ app.get('/car',async (req,res)=>{
     res.send(cars)
 
 
-})
+});
+
+app.put('/car/:id',async(req,res)=>{
+  const id=req.params.id;
+  const newQuantity=req.body;
+  const filter={_id:ObjectId(id)}
+  const options={ upsert:true}
+  const updatedQuantity={
+    $set:{
+      quantity:newQuantity.quantity
+    }
+  }
+  const result=await carCollection.updateOne(filter,updatedQuantity,options)
+  res.send(result)
+});
 
 app.get('/car/:id',async(req,res)=>{
     const id=req.params.id;
