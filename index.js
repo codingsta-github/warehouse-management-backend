@@ -18,48 +18,58 @@ const client = new MongoClient(uri, {
 });
 async function run() {
   try {
-      await client.connect()
-      const carCollection=client.db('marcedex-warehouse').collection('cars')
-app.get('/car',async (req,res)=>{
-    const query={};
-    const cursor=carCollection.find(query);
-    const cars=await cursor.toArray();
-    res.send(cars)
+    await client.connect();
+    const carCollection = client.db("marcedex-warehouse").collection("cars");
 
+    //create
+    app.post("/car", async (req, res) => {
+      const newItem=req.body;
+      const result=await carCollection.insertOne(newItem);
+      res.send(result)
+    });
 
-});
+    //Read
+    app.get("/car", async (req, res) => {
+      const query = {};
+      const cursor = carCollection.find(query);
+      const cars = await cursor.toArray();
+      res.send(cars);
+    });
 
-app.put('/car/:id',async(req,res)=>{
-  const id=req.params.id;
-  const newQuantity=req.body;
-  const filter={_id:ObjectId(id)}
-  const options={ upsert:true}
-  const updatedQuantity={
-    $set:{
-      quantity:newQuantity.quantity
-    }
-  }
-  const result=await carCollection.updateOne(filter,updatedQuantity,options)
-  res.send(result)
-});
+    app.get("/car/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const car = await carCollection.findOne(query);
+      res.send(car);
+    });
 
-app.get('/car/:id',async(req,res)=>{
-    const id=req.params.id;
-    const query= {_id:ObjectId(id)}
-    const car=await carCollection.findOne(query);
-    res.send(car);
-});
+    //update
+    app.put("/car/:id", async (req, res) => {
+      const id = req.params.id;
+      const newQuantity = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updatedQuantity = {
+        $set: {
+          quantity: newQuantity.quantity,
+        },
+      };
+      const result = await carCollection.updateOne(
+        filter,
+        updatedQuantity,
+        options
+      );
+      res.send(result);
+    });
 
-
-app.delete('/car/:id',async (req,res)=>{
-  const id=req.params.id;
-  const query={_id:ObjectId(id)};
-  const result=await carCollection.deleteOne(query);
-  res.send(result)
-})
-
-  } 
-  finally {
+    //delete
+    app.delete("/car/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await carCollection.deleteOne(query);
+      res.send(result);
+    });
+  } finally {
   }
 }
 run().catch(console.dir);
