@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 const app = express();
@@ -23,9 +24,9 @@ async function run() {
 
     //create
     app.post("/car", async (req, res) => {
-      const newItem=req.body;
-      const result=await carCollection.insertOne(newItem);
-      res.send(result)
+      const newItem = req.body;
+      const result = await carCollection.insertOne(newItem);
+      res.send(result);
     });
 
     //Read
@@ -68,6 +69,15 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const result = await carCollection.deleteOne(query);
       res.send(result);
+    });
+
+    //jsonwebtoken
+    app.post("/login", async (req, res) => {
+      const user = req.body;
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "id",
+      });
+      res.send({ token });
     });
   } finally {
   }
