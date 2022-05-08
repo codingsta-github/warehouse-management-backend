@@ -39,7 +39,7 @@ async function run() {
 
     app.get("/car", async (req, res) => {
       const email = req.query.email;
-      const query = { email };
+      const query = { email:email };
       const cursor = carCollection.find(query);
       const cars = await cursor.toArray();
       res.send(cars);
