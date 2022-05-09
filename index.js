@@ -30,16 +30,17 @@ async function run() {
     });
 
     //Read
-    app.get("/car", async (req, res) => {
-      const query = {};
-      const cursor = carCollection.find(query);
-      const cars = await cursor.toArray();
-      res.send(cars);
-    });
+    // app.get("/car", async (req, res) => {
+    //   const query = {};
+    //   const cursor = carCollection.find(query);
+    //   const cars = await cursor.toArray();
+    //   res.send(cars);
+    // });
 
     app.get("/car", async (req, res) => {
       const email = req.query.email;
-      const query = { email:email };
+      const query = { email: email };
+      console.log(email);
       const cursor = carCollection.find(query);
       const cars = await cursor.toArray();
       res.send(cars);
@@ -51,7 +52,6 @@ async function run() {
       const car = await carCollection.findOne(query);
       res.send(car);
     });
-
     //update
     app.put("/car/:id", async (req, res) => {
       const id = req.params.id;
@@ -98,5 +98,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log("listening to port");
+  console.log("listening to portfdf dddddfdfdf");
 });
