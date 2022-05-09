@@ -30,12 +30,12 @@ async function run() {
     });
 
     Read
-    app.get("/car", async (req, res) => {
-      const query = {};
-      const cursor = carCollection.find(query);
-      const cars = await cursor.toArray();
-      res.send(cars);
-    });
+    // app.get("/car", async (req, res) => {
+    //   const query = {};
+    //   const cursor = carCollection.find(query);
+    //   const cars = await cursor.toArray();
+    //   res.send(cars);
+    // });
 
     app.get("/userCar", async (req, res) => {
       const email = req.query.email;
