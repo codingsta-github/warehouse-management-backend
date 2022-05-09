@@ -16,13 +16,6 @@ function verifyJWT(req, res, next) {
   if (!authHeader) {
     return res.status(401).send({ message: "unauthorized access" });
   }
-  const token = authHeader.split(" ")[1];
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(403).send("forbidden access");
-    }
-    req.decoded = decoded;
-  });
   next();
 }
 
@@ -53,17 +46,11 @@ async function run() {
     });
 
     app.get("/userCar", verifyJWT, async (req, res) => {
-      const decodedEmail = req.decoded.email;
-
       const email = req.query.email;
-      if (decodedEmail === email) {
-        const query = { email: email };
-        const cursor = carCollection.find(query);
-        const cars = await cursor.toArray();
-        res.send(cars);
-      }
-      else{res.status(403).send({message:'forbidden access'})}
-      
+      const query = { email: email };
+      const cursor = carCollection.find(query);
+      const cars = await cursor.toArray();
+      res.send(cars);
     });
 
     app.get("/car/:id", async (req, res) => {
@@ -105,7 +92,7 @@ async function run() {
       const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: "1d",
       });
-      res.send({ accessToken });
+      res.send({ token });
     });
   } finally {
   }
