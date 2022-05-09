@@ -30,14 +30,14 @@ async function run() {
     });
 
     Read
-    app.get("/", async (req, res) => {
+    app.get("/car", async (req, res) => {
       const query = {};
       const cursor = carCollection.find(query);
       const cars = await cursor.toArray();
       res.send(cars);
     });
 
-    app.get("/car", async (req, res) => {
+    app.get("/userCar", async (req, res) => {
       const email = req.query.email;
       const query = { email: email };
       console.log(email);
